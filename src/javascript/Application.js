@@ -231,6 +231,7 @@ export default class Application
             passes: this.passes
         })
         this.scene.add(this.world.container)
+        // debugger
     }
 
     /**

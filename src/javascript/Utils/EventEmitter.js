@@ -118,7 +118,7 @@ export default class
     }
 
     /**
-     * Trigger
+     * Trigger  触发事件
      */
     trigger(_name, _args)
     {

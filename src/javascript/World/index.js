@@ -20,14 +20,16 @@ import PlaygroundSection from './Sections/PlaygroundSection.js'
 // import DistinctionDSection from './Sections/DistinctionDSection.js'
 import Controls from './Controls.js'
 import Sounds from './Sounds.js'
-import { TweenLite } from 'gsap/TweenLite'
-import { Power2 } from 'gsap/EasePack'
+import {
+    TweenLite
+} from 'gsap/TweenLite'
+import {
+    Power2
+} from 'gsap/EasePack'
 import EasterEggs from './EasterEggs.js'
 
-export default class
-{
-    constructor(_options)
-    {
+export default class {
+    constructor(_options) {
         // Options
         this.config = _options.config
         this.debug = _options.debug
@@ -39,8 +41,7 @@ export default class
         this.passes = _options.passes
 
         // Debug
-        if(this.debug)
-        {
+        if (this.debug) {
             this.debugFolder = this.debug.addFolder('world')
             this.debugFolder.open() // 打开调试窗口
         }
@@ -57,10 +58,8 @@ export default class
         this.setStartingScreen() // 设定开始画面,在此触发启动开关
     }
 
-    start()
-    {
-        window.setTimeout(() =>
-        {
+    start() {
+        window.setTimeout(() => {
             this.camera.pan.enable()
         }, 2000)
 
@@ -78,8 +77,7 @@ export default class
         this.setEasterEggs()
     }
 
-    setReveal()
-    {
+    setReveal() {
         this.reveal = {}
         this.reveal.matcapsProgress = 0
         this.reveal.floorShadowsProgress = 0
@@ -87,18 +85,39 @@ export default class
         this.reveal.previousFloorShadowsProgress = null
 
         // Go method
-        this.reveal.go = () =>
-        {
-            TweenLite.fromTo(this.reveal, 3, { matcapsProgress: 0 }, { matcapsProgress: 1 })
-            TweenLite.fromTo(this.reveal, 3, { floorShadowsProgress: 0 }, { floorShadowsProgress: 1, delay: 0.5 })
-            TweenLite.fromTo(this.shadows, 3, { alpha: 0 }, { alpha: 0.5, delay: 0.5 })
+        this.reveal.go = () => {
+            TweenLite.fromTo(this.reveal, 3, {
+                matcapsProgress: 0
+            }, {
+                matcapsProgress: 1
+            })
+            TweenLite.fromTo(this.reveal, 3, {
+                floorShadowsProgress: 0
+            }, {
+                floorShadowsProgress: 1,
+                delay: 0.5
+            })
+            TweenLite.fromTo(this.shadows, 3, {
+                alpha: 0
+            }, {
+                alpha: 0.5,
+                delay: 0.5
+            })
 
-            if(this.sections.intro)
-            {
-                TweenLite.fromTo(this.sections.intro.instructions.arrows.label.material, 0.3, { opacity: 0 }, { opacity: 1, delay: 0.5 })
-                if(this.sections.intro.otherInstructions)
-                {
-                    TweenLite.fromTo(this.sections.intro.otherInstructions.label.material, 0.3, { opacity: 0 }, { opacity: 1, delay: 0.75 })
+            if (this.sections.intro) {
+                TweenLite.fromTo(this.sections.intro.instructions.arrows.label.material, 0.3, {
+                    opacity: 0
+                }, {
+                    opacity: 1,
+                    delay: 0.5
+                })
+                if (this.sections.intro.otherInstructions) {
+                    TweenLite.fromTo(this.sections.intro.otherInstructions.label.material, 0.3, {
+                        opacity: 0
+                    }, {
+                        opacity: 1,
+                        delay: 0.75
+                    })
                 }
             }
 
@@ -106,37 +125,36 @@ export default class
             this.physics.car.chassis.body.sleep()
             this.physics.car.chassis.body.position.set(0, 0, 12)
 
-            window.setTimeout(() =>
-            {
+            window.setTimeout(() => {
                 this.physics.car.chassis.body.wakeUp()
             }, 300)
 
             // Sound
-            TweenLite.fromTo(this.sounds.engine.volume, 0.5, { master: 0 }, { master: 0.7, delay: 0.3, ease: Power2.easeIn })
-            window.setTimeout(() =>
-            {
+            TweenLite.fromTo(this.sounds.engine.volume, 0.5, {
+                master: 0
+            }, {
+                master: 0.7,
+                delay: 0.3,
+                ease: Power2.easeIn
+            })
+            window.setTimeout(() => {
                 this.sounds.play('reveal')
             }, 400)
 
             // Controls
-            if(this.controls.touch)
-            {
-                window.setTimeout(() =>
-                {
+            if (this.controls.touch) {
+                window.setTimeout(() => {
                     this.controls.touch.reveal()
                 }, 400)
             }
         }
 
         // Time tick
-        this.time.on('tick',() =>
-        {
+        this.time.on('tick', () => {
             // Matcap progress changed
-            if(this.reveal.matcapsProgress !== this.reveal.previousMatcapsProgress)
-            {
+            if (this.reveal.matcapsProgress !== this.reveal.previousMatcapsProgress) {
                 // Update each material
-                for(const _materialKey in this.materials.shades.items)
-                {
+                for (const _materialKey in this.materials.shades.items) {
                     const material = this.materials.shades.items[_materialKey]
                     material.uniforms.uRevealProgress.value = this.reveal.matcapsProgress
                 }
@@ -146,11 +164,9 @@ export default class
             }
 
             // Matcap progress changed
-            if(this.reveal.floorShadowsProgress !== this.reveal.previousFloorShadowsProgress)
-            {
+            if (this.reveal.floorShadowsProgress !== this.reveal.previousFloorShadowsProgress) {
                 // Update each floor shadow
-                for(const _mesh of this.objects.floorShadows)
-                {
+                for (const _mesh of this.objects.floorShadows) {
                     _mesh.material.uniforms.uAlpha.value = this.reveal.floorShadowsProgress
                 }
 
@@ -160,8 +176,7 @@ export default class
         })
 
         // Debug
-        if(this.debug)
-        {
+        if (this.debug) {
             this.debugFolder.add(this.reveal, 'matcapsProgress').step(0.0001).min(0).max(1).name('matcapsProgress')
             this.debugFolder.add(this.reveal, 'floorShadowsProgress').step(0.0001).min(0).max(1).name('floorShadowsProgress')
             this.debugFolder.add(this.reveal, 'go').name('reveal')
@@ -169,8 +184,7 @@ export default class
     }
 
     // 开局的START画面 
-    setStartingScreen()
-    {
+    setStartingScreen() {
         this.startingScreen = {}
 
         // Area START 外框
@@ -201,7 +215,12 @@ export default class
          */
         this.startingScreen.loadingLabel.texture.minFilter = THREE.LinearFilter
         this.startingScreen.loadingLabel.texture.needsUpdate = true // 将其设置为true，以便在下次使用纹理时触发一次更新。 这对于设置包裹模式尤其重要。
-        this.startingScreen.loadingLabel.material = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false, color: 0xffffff, alphaMap: this.startingScreen.loadingLabel.texture })
+        this.startingScreen.loadingLabel.material = new THREE.MeshBasicMaterial({
+            transparent: true,
+            depthWrite: false,
+            color: 0xffffff,
+            alphaMap: this.startingScreen.loadingLabel.texture
+        })
         this.startingScreen.loadingLabel.mesh = new THREE.Mesh(this.startingScreen.loadingLabel.geometry, this.startingScreen.loadingLabel.material)
         this.startingScreen.loadingLabel.mesh.matrixAutoUpdate = false
         this.container.add(this.startingScreen.loadingLabel.mesh) // 添加到场景
@@ -215,66 +234,77 @@ export default class
         this.startingScreen.startLabel.texture.magFilter = THREE.NearestFilter
         this.startingScreen.startLabel.texture.minFilter = THREE.LinearFilter
         this.startingScreen.startLabel.texture.needsUpdate = true
-        this.startingScreen.startLabel.material = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false, color: 0xffffff, alphaMap: this.startingScreen.startLabel.texture })
+        this.startingScreen.startLabel.material = new THREE.MeshBasicMaterial({
+            transparent: true,
+            depthWrite: false,
+            color: 0xffffff,
+            alphaMap: this.startingScreen.startLabel.texture
+        })
         this.startingScreen.startLabel.material.opacity = 0
         this.startingScreen.startLabel.mesh = new THREE.Mesh(this.startingScreen.startLabel.geometry, this.startingScreen.startLabel.material)
         this.startingScreen.startLabel.mesh.matrixAutoUpdate = false
         this.container.add(this.startingScreen.startLabel.mesh)
 
-        // Progress  进度条
-        this.resources.on('progress', (_progress) =>
-        {
+        // Progress  进度条  监听progress事件
+        this.resources.on('progress', (_progress) => {
+            // console.log('实时粗发进度值',_progress)
             // Update area
             this.startingScreen.area.floorBorder.material.uniforms.uAlpha.value = 1
             this.startingScreen.area.floorBorder.material.uniforms.uLoadProgress.value = _progress
         })
 
-        // Ready 准备好了
-        this.resources.on('ready', () =>
-        {
-            window.requestAnimationFrame(() =>
-            {
+        // Ready 准备好了  监听ready事件
+        this.resources.on('ready', () => {
+            console.log('准备好了')
+            window.requestAnimationFrame(() => {
                 this.startingScreen.area.activate()
-
-                TweenLite.to(this.startingScreen.area.floorBorder.material.uniforms.uAlpha, 0.3, { value: 0.3 })
-                TweenLite.to(this.startingScreen.loadingLabel.material, 0.3, { opacity: 0 })
-                TweenLite.to(this.startingScreen.startLabel.material, 0.3, { opacity: 1, delay: 0.3 })
+                TweenLite.to(this.startingScreen.area.floorBorder.material.uniforms.uAlpha, 0.3, {
+                    value: 0.3
+                })
+                TweenLite.to(this.startingScreen.loadingLabel.material, 0.3, {
+                    opacity: 0
+                })
+                TweenLite.to(this.startingScreen.startLabel.material, 0.3, {
+                    opacity: 1,
+                    delay: 0.3
+                })
             })
         })
 
-        // On interact, reveal
-        this.startingScreen.area.on('interact', () =>
-        {
+        // On interact, reveal   交互 点击start开始
+        this.startingScreen.area.on('interact', () => {
             this.startingScreen.area.deactivate()
-            TweenLite.to(this.startingScreen.area.floorBorder.material.uniforms.uProgress, 0.3, { value: 0, delay: 0.4 })
+            TweenLite.to(this.startingScreen.area.floorBorder.material.uniforms.uProgress, 0.3, {
+                value: 0,
+                delay: 0.4
+            })
 
-            TweenLite.to(this.startingScreen.startLabel.material, 0.3, { opacity: 0, delay: 0.4 })
+            TweenLite.to(this.startingScreen.startLabel.material, 0.3, {
+                opacity: 0,
+                delay: 0.4
+            })
 
             this.start() // 启动/开始
 
-            window.setTimeout(() =>
-            {
+            window.setTimeout(() => {
                 this.reveal.go()
             }, 600)
         })
     }
     // 设置声音
-    setSounds()
-    {
+    setSounds() {
         this.sounds = new Sounds({
             debug: this.debugFolder,
             time: this.time
         })
     }
     // 设置坐标轴
-    setAxes()
-    {
+    setAxes() {
         this.axis = new THREE.AxesHelper()
         this.container.add(this.axis)
     }
     // 设置控制器
-    setControls()
-    {
+    setControls() {
         this.controls = new Controls({
             config: this.config,
             sizes: this.sizes,
@@ -284,25 +314,23 @@ export default class
         })
     }
     // 设置材质
-    setMaterials()
-    {
+    setMaterials() {
         this.materials = new Materials({
             resources: this.resources,
             debug: this.debugFolder
         })
     }
     // 设置地板
-    setFloor()
-    {
+    setFloor() {
         this.floor = new Floor({
             debug: this.debugFolder
         })
 
         this.container.add(this.floor.container)
+
     }
     // 设置阴影
-    setShadows()
-    {
+    setShadows() {
         this.shadows = new Shadows({
             time: this.time,
             debug: this.debugFolder,
@@ -312,8 +340,7 @@ export default class
         this.container.add(this.shadows.container)
     }
     // 物理
-    setPhysics()
-    {
+    setPhysics() {
         this.physics = new Physics({
             config: this.config,
             debug: this.debug,
@@ -326,8 +353,7 @@ export default class
         this.container.add(this.physics.models.container)
     }
     // 区域
-    setZones()
-    {
+    setZones() {
         this.zones = new Zones({
             time: this.time,
             physics: this.physics,
@@ -336,8 +362,7 @@ export default class
         this.container.add(this.zones.container)
     }
 
-    setAreas()
-    {
+    setAreas() {
         this.areas = new Areas({
             config: this.config,
             resources: this.resources,
@@ -352,8 +377,7 @@ export default class
         this.container.add(this.areas.container)
     }
     // 设置title
-    setTiles()
-    {
+    setTiles() {
         this.tiles = new Tiles({
             resources: this.resources,
             objects: this.objects,
@@ -361,16 +385,14 @@ export default class
         })
     }
     // 设置墙壁
-    setWalls()
-    {
+    setWalls() {
         this.walls = new Walls({
             resources: this.resources,
             objects: this.objects
         })
     }
     // 
-    setObjects()
-    {
+    setObjects() {
         this.objects = new Objects({
             time: this.time,
             resources: this.resources,
@@ -388,8 +410,7 @@ export default class
         // })
     }
 
-    setCar()
-    {
+    setCar() {
         this.car = new Car({
             time: this.time,
             resources: this.resources,
@@ -407,8 +428,7 @@ export default class
         this.container.add(this.car.container)
     }
 
-    setSections()
-    {
+    setSections() {
         this.sections = {}
 
         // Generic options
@@ -470,7 +490,7 @@ export default class
         this.sections.crossroads = new CrossroadsSection({
             ...options,
             x: 0,
-            y: - 30
+            y: -30
         })
         this.container.add(this.sections.crossroads.container)
 
@@ -478,7 +498,7 @@ export default class
         this.sections.projects = new ProjectsSection({
             ...options,
             x: 30,
-            y: - 30
+            y: -30
             // x: 0,
             // y: 0
         })
@@ -488,7 +508,7 @@ export default class
         this.sections.information = new InformationSection({
             ...options,
             x: 1.2,
-            y: - 55
+            y: -55
             // x: 0,
             // y: - 10
         })
@@ -497,16 +517,15 @@ export default class
         // Playground
         this.sections.playground = new PlaygroundSection({
             ...options,
-            x: - 38,
-            y: - 34
+            x: -38,
+            y: -34
             // x: - 15,
             // y: - 4
         })
         this.container.add(this.sections.playground.container)
     }
 
-    setEasterEggs()
-    {
+    setEasterEggs() {
         this.easterEggs = new EasterEggs({
             resources: this.resources,
             car: this.car,
