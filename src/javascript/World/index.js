@@ -50,7 +50,7 @@ export default class {
         this.container = new THREE.Object3D()
         this.container.matrixAutoUpdate = false // 默认true 当这个属性设置了之后，它将计算每一帧的位移、旋转（四元变换）和缩放矩阵，并重新计算matrixWorld属性
 
-        this.setAxes() // 设置辅助轴线
+        // this.setAxes() // 设置辅助轴线
         this.setSounds() // 设置声音
         this.setControls() // 设置控制器
         this.setFloor() // 设置地板

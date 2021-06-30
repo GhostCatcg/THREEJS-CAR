@@ -94,12 +94,13 @@ export default class Resources extends EventEmitter {
     /**
      * Load   开始加载
      */
-    load(_resources = [])
-    {
+    load(_resources = []) {
         for (const _resource of _resources) {
             this.toLoad++
 
             const extensionMatch = _resource.source.match(/\.([a-z]+)$/)
+
+            // console.log(`加载${this.toLoad}`)
 
             if (typeof extensionMatch[1] !== 'undefined') {
                 const extension = extensionMatch[1]

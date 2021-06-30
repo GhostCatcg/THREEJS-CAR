@@ -122,6 +122,8 @@ export default class
      */
     trigger(_name, _args)
     {
+        // debugger
+
         // Errors
         if(typeof _name === 'undefined' || _name === '')
         {
@@ -185,7 +187,7 @@ export default class
     }
 
     /**
-     * Resolve names
+     * Resolve names name去掉一些特殊符号
      */
     resolveNames(_names)
     {

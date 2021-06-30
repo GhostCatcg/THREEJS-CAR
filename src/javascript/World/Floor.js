@@ -38,7 +38,7 @@ export default class Floor
                 Math.round(topLeft.r * 255), Math.round(topLeft.g * 255), Math.round(topLeft.b * 255),
                 Math.round(topRight.r * 255), Math.round(topRight.g * 255), Math.round(topRight.b * 255)
             ])
-            console.log(data,'地板',this)
+            // console.log(data,'地板',this)
             // DataTexture 从原始数据（raw data）、宽（width）、高（height）来直接创建一个纹理贴图。
             this.backgroundTexture = new THREE.DataTexture(data, 2, 2, THREE.RGBFormat)
             this.backgroundTexture.magFilter = THREE.LinearFilter

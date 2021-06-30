@@ -204,7 +204,6 @@ import wig1Source from '../models/wigs/wig1.glb'
 import wig2Source from '../models/wigs/wig2.glb'
 import wig3Source from '../models/wigs/wig3.glb'
 import wig4Source from '../models/wigs/wig4.glb'
-console.log('加载', wig4Source)
 export default class Resources extends EventEmitter {
     constructor() {
         super()
@@ -837,7 +836,6 @@ export default class Resources extends EventEmitter {
 
                 this.items[`${_resource.name}Texture`] = texture
             }
-            // console.log(`当前进度:${this.loader.loaded} 总进度:${this.loader.toLoad}`)
             // Trigger progress
             this.trigger('progress', [this.loader.loaded / this.loader.toLoad])
         })
@@ -846,6 +844,6 @@ export default class Resources extends EventEmitter {
             // Trigger ready
             this.trigger('ready')
         })
-        debugger
+        // debugger
     }
 }
